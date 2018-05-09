@@ -3,13 +3,6 @@
 # 导入 python 中的 flex 及 yacc 库: PLY
 from ply import lex
 
-# 定义可能用到的 正规文法类型。 示例如下:
-
-# tokens = (
-#     "SYMBOL",
-#     "COUNT"
-# )
-
 # 定义可能用到的 正规文法类型。
 tokens = (
     "IDENTIFIER",  # 变量名(标识符)
@@ -19,22 +12,9 @@ tokens = (
     "FLOAT10", # 十进制小数
     "FLOAT8", # 八进制小数
     "FLOAT16", # 十六进制小数
-    # "SYMBOL", # 符号
-    # "KEYWORD" # 关键字
+    #"SYMBOL"# 符号
+    "KEYWORD" # 关键字
 )
-
-# 利用正则匹配出所有可能出现的情况，示例如下:
-
-# t_SYMBOL = (
-#     r"C[laroudsemf]?|Os?|N[eaibdpos]?|S[icernbmg]?|P[drmtboau]?|"
-#     r"H[eofgas]?|A[lrsgutcm]|B[eraik]?|Dy|E[urs]|F[erm]?|G[aed]|"
-#     r"I[nr]?|Kr?|L[iaur]|M[gnodt]|R[buhenaf]|T[icebmalh]|"
-#     r"U|V|W|Xe|Yb?|Z[nr]")
-#
-# def t_COUNT(t):
-#     r"\d+"
-#     t.value = int(t.value)
-#     return t
 
 # 利用正则匹配出所有可能出现的情况
 # 此为IDENTIFIER的各种情况
@@ -77,19 +57,29 @@ t_INT10 = (
     r'|0'  # 匹配 0
 )
 
+literals = ['+', '-', '*', '/','=','(',')',';','<','>']
+
+# 关键字相关匹配
+def t_KEYWORD(t):
+    r'if|then|else|while|do'
+    t.type = t.type
+    t.value = t.value
+    return t
+
 # 可以添加ignore_前缀表示将丢弃匹配的token，比如空格' '和换行符'\t'
 # 来匹配掉不计入词法分析的\n \s \t 等字符
 t_ignore_SPACE = (
     r'[\s]+'
 )
 
-
+# 异常处理
 def t_error(t):
     raise TypeError("Unknown text '%s'" % (t.value,))
 
 lex.lex()
 
-lex.input(" a1.asd huihui ha_hui 23 43.23 0.34 10.23 1.00 0x10 0xa3 07 0x0000 0 00.0 000.0 0x00.23 0000.07")
+# lex.input(" a1.asd huihui ha_hui 23 43.23 0.34 10.23 1.00 0x10 0xa3 07 0x0000 0 00.0 000.0 0x00.23 0000.07 ; elelse else if")
+lex.input("0 92+data> 0x3f 00 while a+acc>xx do x=x-1;a=6.2+a*0X88.80;if a>b then a=b else a=b-1+c;")
 for tok in iter(lex.token, None):
     print repr(tok.type),repr(tok.value)
 
