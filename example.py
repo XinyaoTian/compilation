@@ -24,4 +24,4 @@ lex.lex()
 
 lex.input("CH3COOH")
 for tok in iter(lex.token, None):
-    print repr(tok.type), repr(tok.value)
+    print (repr(tok.type), repr(tok.value))
