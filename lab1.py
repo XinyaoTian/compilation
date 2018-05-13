@@ -8,7 +8,8 @@
 import logging
 logging.basicConfig(level = logging.DEBUG)
 
-import struct
+from func_pack import hex_to_dec
+from func_pack import oct_to_dec
 
 # 导入 python 中的 flex 及 yacc 库: PLY
 from ply import lex
@@ -54,6 +55,7 @@ def t_REAL16(t):
     r'0[x|X][1-9a-f][0-9a-f]*\.[0-9a-f]+|0[x|X]0+\.[0-9a-f]+'
     # 匹配整数部分非0的十六进制小数
     # 匹配整数部分为0的十六进制小数
+    t.value = hex_to_dec(t.value)
     return t
 
 # 八进制浮点型
@@ -61,6 +63,7 @@ def t_REAL8(t):
     r'0[1-7][0-7]*\.[0-7]+|00+\.[0-7]+'
     # 匹配整数部分非0的八进制小数
     # 匹配整数部分非0的八进制小数
+    t.value = oct_to_dec(t.value)
     return t
 
 # 十进制浮点型
@@ -73,11 +76,13 @@ def t_REAL10(t):
 # 十六进制整数
 def t_INT16(t):
     r'0[x|X][0-9a-f][0-9a-f]*'
+    t.value = hex_to_dec(t.value)
     return t
 
 # 八进制整数
 def t_INT8(t):
     r'0[0-7]+|000*'
+    t.value = oct_to_dec(t.value)
     return t
 
 # 十进制整型
