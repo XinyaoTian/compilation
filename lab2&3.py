@@ -52,32 +52,41 @@ precedence = (
 #     # print(p[1])
 #     logging.info(str(p[0]) + " when S -> E")
 
-def p_statement_cond(p):
-    '''statement : condition'''
-    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
-    d['bool'] = p[1]['bool']
-    print(p[1]['bool'])
-    logging.info(str(d) + " when S -> C")
+# def p_statement_cond(p):
+#     '''statement : condition'''
+#     d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+#     d['bool'] = p[1]['bool']
+#     print(p[1]['bool'])
+#     logging.info(str(d) + " when S -> C")
 
 # --------------------------------------- #
 
-# # P -> L
-# def p_prime_line(p):
-#     '''prime : line'''
-#     p[0] = p[1]
-#     logging.info(str(p[0]) + " when P -> L")
+# P -> L
+def p_prime_line(p):
+    '''prime : line'''
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+    d['code'] = p[1]['code']
+    d['bool'] = p[1]['bool']
+    p[0] = d
+    logging.info(str(p[0]) + " when P -> L")
 #
-# # P -> LP1
-# def p_prime_lineprime(p):
-#     '''prime : line prime'''
-#     p[0] = p[1] + p[2]
-#     logging.info(str(p[0]) + " when P -> LP1")
+# P -> LP1
+def p_prime_lineprime(p):
+    '''prime : line prime'''
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+    d['code'] = str(p[1]['code']) + ' ' + str(p[2]['code'])
+    d['bool'] = p[2]['bool']
+    p[0] = d
+    logging.info(str(p[0]) + " when P -> LP1")
 #
-# L -> S
-# def p_line_statement(p):
-#     '''line : statement ';' '''
-#     p[0] = p[1]
-#     logging.info(str(p[0]) + " when L -> S")
+# L -> S ;
+def p_line_statement(p):
+    '''line : statement ';' '''
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+    d['code'] = p[1]['code'] + ';'
+    d['bool'] = p[1]['bool']
+    p[0] = d
+    logging.info(str(p[0]) + " when L -> S")
 #
 # S -> id = E
 def p_id_statement(p):
@@ -90,32 +99,54 @@ def p_id_statement(p):
 # S -> if C then S1
 def p_statement_if(p):
     '''statement : IF condition THEN statement'''
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+    d['code'] = 'if ' + str(p[2]['code']) + ' then ' + str(p[4]['code'])
     if p[2]['bool'] is True:
-        logging.WARN("Ready to parse " + str(p[4]['code']))
-        yacc.parse(p[4]['code'])
+        d['bool'] = p[2]['bool']
+        p[0] = d
+        logging.info("Choose S1 \n"+str(p[0]) + " when S -> if C then S1 ")
+    else:
+        d['bool'] = p[2]['bool']
+        p[0] = d
+        logging.info("Do nothing")
 
 # # S -> if C then S1 else S2
 def p_statement_ifelse(p):
     '''statement : IF condition THEN statement ELSE statement'''
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+    d['code'] = 'if ' + str(p[2]['code']) + ' then ' + str(p[4]['code']) + ' else ' +str(p[6]['code'])
     if p[2]['bool'] is True:
-        yacc.parse(p[4]['code'])
+        d['bool'] = p[2]['bool']
+        p[0] = d
+        logging.info("Choose S1 \n" + str(p[0]) + " when S -> if C then S1 else S2 ")
     else:
-        yacc.parse(p[6]['code'])
+        d['bool'] = p[2]['bool']
+        p[0] = d
+        logging.info("Choose S2 \n" + str(p[0]) + " when S -> if C then S1 else S2 ")
 
 # S -> while C do S
 def p_statement_while(p):
     '''statement : WHILE condition DO statement '''
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+    d['code'] ='while ' + p[2]['code'] + ' do ' + p[4]['code']
     if p[2]['bool'] is True :
-        yacc.parse(p[4]['code'])
+        d['bool'] = p[2]['bool']
+        p[0] = d
+        logging.info("Choose S2 \n" + str(p[0]) + " when S -> while C do S ")
     else:
+        d['bool'] = p[2]['bool']
+        p[0] = d
+        logging.info("Do nothing")
         pass
 
 
 # S -> { P }
-# def p_statement_prime(p):
-#     '''statement : '{' prime '}' '''
-#     print(p[2])
-#     logging.info(str(p[2]) + " when S -> {P}")
+def p_statement_prime(p):
+    '''statement : '{' prime '}' '''
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+    d['code'] = p[2]['code']
+    p[0] = d
+    logging.info(str(p[0]) + " when S -> {P}")
 
 # C -> E1 > E2 | E1 < E2 | E1
 def p_condition_expression(p):
@@ -251,11 +282,16 @@ def p_error(p):
 # Build the parser
 yacc.yacc(debug=1)
 
-while 1:
-    try:
-        s = raw_input('Input your code here:\n')
-    except EOFError:
-        break
-    if not s: continue
-    yacc.parse(s)
+with open('./lab2_testData.txt','r') as f:
+    data = f.read()
+
+yacc.parse(data)
+
+# while 1:
+#     try:
+#         s = raw_input('Input your code here:\n')
+#     except EOFError:
+#         break
+#     if not s: continue
+#     yacc.parse(s)
 
