@@ -56,6 +56,7 @@ def t_REAL16(t):
     # 匹配整数部分非0的十六进制小数
     # 匹配整数部分为0的十六进制小数
     t.value = hex_to_dec(t.value)
+    t.value = float(t.value)
     return t
 
 # 八进制浮点型
@@ -64,6 +65,7 @@ def t_REAL8(t):
     # 匹配整数部分非0的八进制小数
     # 匹配整数部分非0的八进制小数
     t.value = oct_to_dec(t.value)
+    t.value = float(t.value)
     return t
 
 # 十进制浮点型
@@ -71,23 +73,27 @@ def t_REAL10(t):
     r'[1-9][\d]*\.[\d]+|0\.[\d]+'
     # 匹配整数部分非0的小数
     # 匹配整数部分为0的小数
+    t.value = float(t.value)
     return t
 
 # 十六进制整数
 def t_INT16(t):
     r'0[x|X][0-9a-f][0-9a-f]*'
     t.value = hex_to_dec(t.value)
+    t.value = int(t.value)
     return t
 
 # 八进制整数
 def t_INT8(t):
     r'0[0-7]+|000*'
     t.value = oct_to_dec(t.value)
+    t.value = int(t.value)
     return t
 
 # 十进制整型
 def t_INT10(t):
     r'[1-9][\d]*|0'
+    t.value = int(t.value)
     return t
 
 # 关键字相关匹配
@@ -106,7 +112,7 @@ def t_IDENTIFIER(t):
     t.type = reserved.get(t.value,'IDENTIFIER') # 匹配标识符时先检查是否为预留字
         # 利用 dict.get() 方法, 若是预留字则修改t.type;若不是则保持t.type为IDENTIFIER不变
     if t.type is not 'IDENTIFIER': # 若t.type不是IDENTIFIER
-        t.value = '_'  # 则将t.value 置为 '_'
+        t.value = t.value
     return t
 
 # 使用内置的literals,配合下面定义的各种方法识别symbols
@@ -115,61 +121,61 @@ literals = ['+', '-', '*', '/','=','(',')',';','<','>']
 def t_add(t):
     r'\+'
     t.type = '+'
-    t.value = '_'
+    t.value = '+'
     return t
 
 def t_sub(t):
     r'-'
     t.type = '-'
-    t.value = '_'
+    t.value = '-'
     return t
 
 def t_mult(t):
     r'\*'
     t.type = '*'
-    t.value = '_'
+    t.value = '*'
     return t
 
 def t_div(t):
     r'\/'
     t.type = '/'
-    t.value = '_'
+    t.value = '/'
     return t
 
 def t_equal(t):
     r'='
     t.type = '='
-    t.value = '_'
+    t.value = '='
     return t
 
 def t_lparent(t):
     r'\('
     t.type = '('
-    t.value = '_'
+    t.value = '('
     return t
 
 def t_rparent(t):
     r'\)'
     t.type = ')'
-    t.value = '_'
+    t.value = ')'
     return t
 
 def t_semi(t):
     r';'
     t.type = ';'
-    t.value = '_'
+    t.value = ';'
     return t
 
 def t_lts(t):
     r'<'
     t.type = '<'
-    t.value = '_'
+    t.value = '<'
     return t
 
 def t_gts(t):
     r'>'
     t.type = '>'
-    t.value = '_'
+    t.value = '>'
     return t
 
 # 可以添加ignore_前缀表示将丢弃匹配的token，比如空格' '和换行符'\t'
@@ -188,3 +194,38 @@ def t_error(t):
     logging.debug("Illegal character '%s'" % t.value[0] + 'in Line ' + str(t.lineno))
     # t.lexer.skip(1) # 跳过错误字符继续执行
     raise TypeError("Unknown text '%s'" % (t.value,) + '.Please check your syntax.')
+
+#---------------
+# lex.lex()
+#---------------
+
+# # Build the lexer
+lexer = lex.lex()
+# lexer.code = None
+# lexer.true = None
+# lexer.false = None
+# lexer.next = None
+# lexer.begin = None
+# lexer.place = None
+# lexer.value = None
+# lexer.name = None
+
+# Build the lexer
+# lexer = lex.lex()
+#
+# with open('./lab1_testData.txt','r') as f:
+#     data = f.read()
+#
+# # 将测试用数据传入lex
+# lexer.input(data)
+#
+# # 切分次 Tokenize
+# while True:
+#     tok = lex.token()
+#     if not tok:
+#         break       # no more input
+#     print (repr(tok.type),repr(tok.value))
+
+# lex.input("CH3COOH")
+# for tok in iter(lex.token, None):
+#     print repr(tok.type), repr(tok.value)

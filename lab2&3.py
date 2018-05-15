@@ -11,9 +11,11 @@ import sys
 if sys.version_info[0] >= 3:
     raw_input = input
 
+import logging
+logging.basicConfig(level=logging.INFO)
+
 # 把千辛万苦写好的tokens拿过来
-from lab1 import tokens
-from lab1 import lexer
+from MyLexer import tokens
 
 # # Build the lexer
 # lexer = lex.lex()
@@ -24,127 +26,205 @@ from lab1 import lexer
 # lexer.begin = None
 # lexer.place = None
 
-print("lexer.place = " + str(lexer.place))
+# print("lexer.place = " + str(lexer.place))
 
 import ply.yacc as yacc
 
+precedence = (
+    ('left', '-', '+'),
+    ('left', '*', '/'),
+)
+
+# --------------------------------------- #
+# def p_prime_statement(p):
+#     '''primt : statement'''
+#     # p[0] = p[1]
+#     print(p[1])
+#     logging.info(str(p[1]) + " when P -> S")
+
+
 # def p_statement_expr(p):
 #     '''statement : expression'''
-#     print(p[1])
+#     d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+#     d['value'] = p[1]['value']
+#     d['code'] = str(p[1]['code'])
+#     p[0] = d
+#     # print(p[1])
+#     logging.info(str(p[0]) + " when S -> E")
 
-# P -> L
-def p_prime_line(p):
-    '''prime : line'''
-    print(p[1])
+def p_statement_cond(p):
+    '''statement : condition'''
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+    d['bool'] = p[1]['bool']
+    print(p[1]['bool'])
+    logging.info(str(d) + " when S -> C")
 
-# P -> LP1
-def p_prime_lineprime(p):
-    '''prime : line prime'''
-    p[0] = p[1] + p[2]
+# --------------------------------------- #
 
+# # P -> L
+# def p_prime_line(p):
+#     '''prime : line'''
+#     p[0] = p[1]
+#     logging.info(str(p[0]) + " when P -> L")
+#
+# # P -> LP1
+# def p_prime_lineprime(p):
+#     '''prime : line prime'''
+#     p[0] = p[1] + p[2]
+#     logging.info(str(p[0]) + " when P -> LP1")
+#
 # L -> S
-def p_line_statement(p):
-    '''line : statement'''
-    p[0] = p[1]
-
+# def p_line_statement(p):
+#     '''line : statement ';' '''
+#     p[0] = p[1]
+#     logging.info(str(p[0]) + " when L -> S")
+#
 # S -> id = E
 def p_id_statement(p):
-    '''statement : IDENTIFIER '=' statement'''
-    p[1] = p[3]
+    '''statement : IDENTIFIER '=' expression'''
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+    d['code'] = str(p[1]) + "=" + str(p[3]['code'])
+    p[0] = d
+    logging.info(str(p[0]) + " when S -> id = E ")
 
 # S -> if C then S1
 def p_statement_if(p):
     '''statement : IF condition THEN statement'''
-    if p[2] is True:
-        yacc.parse(p[4])
+    if p[2]['bool'] is True:
+        logging.WARN("Ready to parse " + str(p[4]['code']))
+        yacc.parse(p[4]['code'])
 
-# S -> if C then S1 else S2
+# # S -> if C then S1 else S2
 def p_statement_ifelse(p):
     '''statement : IF condition THEN statement ELSE statement'''
-    if p[2] is True:
-        yacc.parse(p[4])
+    if p[2]['bool'] is True:
+        yacc.parse(p[4]['code'])
     else:
-        yacc.parse(p[6])
+        yacc.parse(p[6]['code'])
 
 # S -> while C do S
 def p_statement_while(p):
     '''statement : WHILE condition DO statement '''
-    if p[2] is True :
-        yacc.parse(p[4])
+    if p[2]['bool'] is True :
+        yacc.parse(p[4]['code'])
     else:
         pass
 
 
-
 # S -> { P }
-def p_statement_prime(p):
-    '''statement : '{' prime '}' '''
-    p[0] = p[2]
+# def p_statement_prime(p):
+#     '''statement : '{' prime '}' '''
+#     print(p[2])
+#     logging.info(str(p[2]) + " when S -> {P}")
 
 # C -> E1 > E2 | E1 < E2 | E1
 def p_condition_expression(p):
     ''' condition : expression '>' expression
                   | expression '<' expression
                   | expression '=' expression'''
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+    # print(p[2])
 
     if p[2] == '>':
-        if p[1] > p[3]:
-            p[0] = True
+        d['code'] = str(p[1]['code']) + ">" + str(p[3]['code'])
+        if p[1]['value'] > p[3]['value']:
+            d['bool'] = True
+            p[0] = d
         else:
-            p[0] = False
+            d['bool'] = False
+            p[0] = d
 
-    elif p[2] == '<':
-        if p[1] < p[3]:
-            p[0] = True
+    elif p[2] is '<':
+        d['code'] = str(p[1]['code']) + "<" + str(p[3]['code'])
+        if p[1]['value'] < p[3]['value']:
+            d['bool'] = True
+            p[0] = d
         else:
-            p[0] = False
+            d['bool'] = False
+            p[0] = d
 
-    elif p[2] == '=':
-        if p[1] == p[3]:
-            p[0] = True
+    elif p[2] is '=':
+        d['code'] = str(p[1]['code']) + "=" + str(p[3]['code'])
+        if p[1]['value'] == p[3]['value']:
+            d['bool'] = True
+            p[0] = d
         else:
-            p[0] = False
+            d['bool'] = False
+            p[0] = d
+
+    logging.info(str(p[0]) + " when C -> E1 > E2 | E1 < E2 | E1.")
 
 
 # E -> E1 + T
 def p_expression_plus(p):
     '''expression : expression '+' term'''
-    p[0] = p[1] + p[3]
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+    d['value'] = p[1]['value'] + p[3]['value']
+    d['code'] = str(p[1]['code']) + "+" + str(p[3]['code'])
+    p[0] = d
+    logging.info(str(d) + " when E -> E1 + T.")
 
 # E -> E1 - T
 def p_expression_minus(p):
     '''expression : expression '-' term'''
-    p[0] = p[1] - p[3]
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+    d['value'] = p[1]['value'] - p[3]['value']
+    d['code'] = str(p[1]['code']) + "-" + str(p[3]['code'])
+    p[0] = d
+    logging.info(str(d) + " when E -> E1 - T.")
 
 # E -> T
 def p_expression_term(p):
     '''expression : term'''
-    p[0] = p[1]
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+    d['value'] = p[1]['value']
+    d['code'] = str(p[1]['value'])
+    p[0] = d
+    logging.info(str(d) + " when E -> T.")
 
 # T -> F
 def p_term_factor(p):
     '''term : factor'''
-    p[0] = p[1]
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+    d['value'] = p[1]['value']
+    d['code'] = p[1]['value']
+    p[0] = d
+    logging.info(str(d) + " when T -> F.")
 
 # T -> T1 * F
 def p_term_multi(p):
     '''term : term '*' factor'''
-    p[0] = p[1] * p[3]
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+    d['value'] = p[1]['value'] * p[3]['value']
+    d['code'] = str(p[1]['code']) + "*" + str(p[3]['code'])
+    p[0] = d
+    logging.info(str(p[0]) + " when T -> T1 * F.")
 
 # T -> T1 / F
 def p_term_div(p):
     '''term : term '/' factor'''
-    p[0] = p[1] / p[3]
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+    d['value'] = p[1]['value'] / p[3]['value']
+    d['code'] = str(p[1]['code']) + "/" + str(p[3]['code'])
+    p[0] = d
+    logging.info(str(p[0]) + " when T -> T1 * F.")
 
 # F -> (E)
 def p_factor_expression(p):
     '''factor : '(' expression ')' '''
-    p[0] = p[2]
+    p[0]['value'] = p[2]['value']
+    p[0]['code'] = str(p[2]['value'])
+    logging.info(str(p[0]) + " when F -> (E).")
 
 # F -> id
 def p_factor_id(p):
     '''factor : IDENTIFIER '''
-    p[0] = p[1]
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+    d['name'] = p[1]
+    d['code'] = str(p[1])
+    p[0] = d
+    print(p[0])
+    logging.info(str(d) + " when F -> IDENTIFIER.")
 
 # F -> NUMBERS
 def p_factor_num(p):
@@ -154,15 +234,22 @@ def p_factor_num(p):
               | REAL10
               | REAL8
               | REAL16 '''
-    p[0] = p[1]
+    d = {'code':'','bool':None,'name':'','value':None,'place':-1}
+    d['value'] = p[1]
+    d['code'] = str(p[1])
+    p[0] = d
+    logging.info(str(d) + " when F -> NUMBERS.")
+
 
 # 异常语法处理
 def p_error(p):
     print("Syntax error in input!")
+    # Just discard the token and tell the parser it's okay.
+    # yacc.errok()
 
 # 建立一个语法解析器
 # Build the parser
-yacc.yacc()
+yacc.yacc(debug=1)
 
 while 1:
     try:

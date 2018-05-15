@@ -5,9 +5,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = "IDENTIFIER REAL10 REAL8 REAL16 INT16 INT8 INT10 IF THEN ELSE WHILE DOstatement : expressionstatement : WHILE condition DO statement  condition : expression '>' expression\n                  | expression '<' expression\n                  | expression '=' expressionexpression : expression '+' termexpression : expression '-' termexpression : termterm : factorterm : term '*' factorterm : term '/' factorfactor : '(' expression ')' factor : IDENTIFIER factor : INT10\n              | INT8\n              | INT16\n              | REAL10\n              | REAL8\n              | REAL16 "
+_lr_signature = "left-+left*/IDENTIFIER REAL10 REAL8 REAL16 INT16 INT8 INT10 IF THEN ELSE WHILE DOstatement : conditionstatement : IDENTIFIER '=' expressionstatement : IF condition THEN statementstatement : IF condition THEN statement ELSE statementstatement : WHILE condition DO statement  condition : expression '>' expression\n                  | expression '<' expression\n                  | expression '=' expressionexpression : expression '+' termexpression : expression '-' termexpression : termterm : factorterm : term '*' factorterm : term '/' factorfactor : '(' expression ')' factor : IDENTIFIER factor : INT10\n              | INT8\n              | INT16\n              | REAL10\n              | REAL8\n              | REAL16 "
     
-_lr_action_items = {'WHILE':([0,23,],[3,3,]),'(':([0,3,6,14,15,18,19,23,24,25,26,],[6,6,6,6,6,6,6,6,6,6,6,]),'IDENTIFIER':([0,3,6,14,15,18,19,23,24,25,26,],[7,7,7,7,7,7,7,7,7,7,7,]),'INT10':([0,3,6,14,15,18,19,23,24,25,26,],[8,8,8,8,8,8,8,8,8,8,8,]),'INT8':([0,3,6,14,15,18,19,23,24,25,26,],[9,9,9,9,9,9,9,9,9,9,9,]),'INT16':([0,3,6,14,15,18,19,23,24,25,26,],[10,10,10,10,10,10,10,10,10,10,10,]),'REAL10':([0,3,6,14,15,18,19,23,24,25,26,],[11,11,11,11,11,11,11,11,11,11,11,]),'REAL8':([0,3,6,14,15,18,19,23,24,25,26,],[12,12,12,12,12,12,12,12,12,12,12,]),'REAL16':([0,3,6,14,15,18,19,23,24,25,26,],[13,13,13,13,13,13,13,13,13,13,13,]),'$end':([1,2,4,5,7,8,9,10,11,12,13,21,22,27,28,29,30,],[0,-1,-8,-9,-13,-14,-15,-16,-17,-18,-19,-6,-7,-10,-11,-12,-2,]),'+':([2,4,5,7,8,9,10,11,12,13,17,20,21,22,27,28,29,31,32,33,],[14,-8,-9,-13,-14,-15,-16,-17,-18,-19,14,14,-6,-7,-10,-11,-12,14,14,14,]),'-':([2,4,5,7,8,9,10,11,12,13,17,20,21,22,27,28,29,31,32,33,],[15,-8,-9,-13,-14,-15,-16,-17,-18,-19,15,15,-6,-7,-10,-11,-12,15,15,15,]),'>':([4,5,7,8,9,10,11,12,13,17,21,22,27,28,29,],[-8,-9,-13,-14,-15,-16,-17,-18,-19,24,-6,-7,-10,-11,-12,]),'<':([4,5,7,8,9,10,11,12,13,17,21,22,27,28,29,],[-8,-9,-13,-14,-15,-16,-17,-18,-19,25,-6,-7,-10,-11,-12,]),'=':([4,5,7,8,9,10,11,12,13,17,21,22,27,28,29,],[-8,-9,-13,-14,-15,-16,-17,-18,-19,26,-6,-7,-10,-11,-12,]),')':([4,5,7,8,9,10,11,12,13,20,21,22,27,28,29,],[-8,-9,-13,-14,-15,-16,-17,-18,-19,29,-6,-7,-10,-11,-12,]),'DO':([4,5,7,8,9,10,11,12,13,16,21,22,27,28,29,31,32,33,],[-8,-9,-13,-14,-15,-16,-17,-18,-19,23,-6,-7,-10,-11,-12,-3,-4,-5,]),'*':([4,5,7,8,9,10,11,12,13,21,22,27,28,29,],[18,-9,-13,-14,-15,-16,-17,-18,-19,18,18,-10,-11,-12,]),'/':([4,5,7,8,9,10,11,12,13,21,22,27,28,29,],[19,-9,-13,-14,-15,-16,-17,-18,-19,19,19,-10,-11,-12,]),}
+_lr_action_items = {'IDENTIFIER':([0,5,6,9,16,17,18,19,20,21,25,26,34,35,41,],[3,23,23,23,23,23,23,23,23,23,23,23,3,3,3,]),'IF':([0,34,35,41,],[5,5,5,5,]),'WHILE':([0,34,35,41,],[6,6,6,6,]),'(':([0,5,6,9,16,17,18,19,20,21,25,26,34,35,41,],[9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,]),'INT10':([0,5,6,9,16,17,18,19,20,21,25,26,34,35,41,],[10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,]),'INT8':([0,5,6,9,16,17,18,19,20,21,25,26,34,35,41,],[11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,]),'INT16':([0,5,6,9,16,17,18,19,20,21,25,26,34,35,41,],[12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,]),'REAL10':([0,5,6,9,16,17,18,19,20,21,25,26,34,35,41,],[13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,]),'REAL8':([0,5,6,9,16,17,18,19,20,21,25,26,34,35,41,],[14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,]),'REAL16':([0,5,6,9,16,17,18,19,20,21,25,26,34,35,41,],[15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,]),'$end':([1,2,7,8,10,11,12,13,14,15,23,28,29,30,31,32,33,36,37,38,39,40,42,],[0,-1,-11,-12,-17,-18,-19,-20,-21,-22,-16,-2,-6,-7,-8,-9,-10,-13,-14,-15,-3,-5,-4,]),'ELSE':([2,7,8,10,11,12,13,14,15,23,28,29,30,31,32,33,36,37,38,39,40,42,],[-1,-11,-12,-17,-18,-19,-20,-21,-22,-16,-2,-6,-7,-8,-9,-10,-13,-14,-15,41,-5,-4,]),'=':([3,4,7,8,10,11,12,13,14,15,23,32,33,36,37,38,],[16,19,-11,-12,-17,-18,-19,-20,-21,-22,-16,-9,-10,-13,-14,-15,]),'*':([3,7,8,10,11,12,13,14,15,23,32,33,36,37,38,],[-16,25,-12,-17,-18,-19,-20,-21,-22,-16,25,25,-13,-14,-15,]),'/':([3,7,8,10,11,12,13,14,15,23,32,33,36,37,38,],[-16,26,-12,-17,-18,-19,-20,-21,-22,-16,26,26,-13,-14,-15,]),'>':([3,4,7,8,10,11,12,13,14,15,23,32,33,36,37,38,],[-16,17,-11,-12,-17,-18,-19,-20,-21,-22,-16,-9,-10,-13,-14,-15,]),'<':([3,4,7,8,10,11,12,13,14,15,23,32,33,36,37,38,],[-16,18,-11,-12,-17,-18,-19,-20,-21,-22,-16,-9,-10,-13,-14,-15,]),'+':([3,4,7,8,10,11,12,13,14,15,23,27,28,29,30,31,32,33,36,37,38,],[-16,20,-11,-12,-17,-18,-19,-20,-21,-22,-16,20,20,20,20,20,-9,-10,-13,-14,-15,]),'-':([3,4,7,8,10,11,12,13,14,15,23,27,28,29,30,31,32,33,36,37,38,],[-16,21,-11,-12,-17,-18,-19,-20,-21,-22,-16,21,21,21,21,21,-9,-10,-13,-14,-15,]),')':([7,8,10,11,12,13,14,15,23,27,32,33,36,37,38,],[-11,-12,-17,-18,-19,-20,-21,-22,-16,38,-9,-10,-13,-14,-15,]),'THEN':([7,8,10,11,12,13,14,15,22,23,29,30,31,32,33,36,37,38,],[-11,-12,-17,-18,-19,-20,-21,-22,34,-16,-6,-7,-8,-9,-10,-13,-14,-15,]),'DO':([7,8,10,11,12,13,14,15,23,24,29,30,31,32,33,36,37,38,],[-11,-12,-17,-18,-19,-20,-21,-22,-16,35,-6,-7,-8,-9,-10,-13,-14,-15,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -16,7 +16,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'statement':([0,23,],[1,30,]),'expression':([0,3,6,23,24,25,26,],[2,17,20,2,31,32,33,]),'term':([0,3,6,14,15,23,24,25,26,],[4,4,4,21,22,4,4,4,4,]),'factor':([0,3,6,14,15,18,19,23,24,25,26,],[5,5,5,5,5,27,28,5,5,5,5,]),'condition':([3,],[16,]),}
+_lr_goto_items = {'statement':([0,34,35,41,],[1,39,40,42,]),'condition':([0,5,6,34,35,41,],[2,22,24,2,2,2,]),'expression':([0,5,6,9,16,17,18,19,34,35,41,],[4,4,4,27,28,29,30,31,4,4,4,]),'term':([0,5,6,9,16,17,18,19,20,21,34,35,41,],[7,7,7,7,7,7,7,7,32,33,7,7,7,]),'factor':([0,5,6,9,16,17,18,19,20,21,25,26,34,35,41,],[8,8,8,8,8,8,8,8,8,8,36,37,8,8,8,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,23 +26,26 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> statement","S'",1,None,None,None),
-  ('statement -> expression','statement',1,'p_statement_expr','lab2&3.py',32),
-  ('statement -> WHILE condition DO statement','statement',4,'p_statement_while','lab2&3.py',36),
-  ('condition -> expression > expression','condition',3,'p_condition_expression','lab2&3.py',47),
-  ('condition -> expression < expression','condition',3,'p_condition_expression','lab2&3.py',48),
-  ('condition -> expression = expression','condition',3,'p_condition_expression','lab2&3.py',49),
-  ('expression -> expression + term','expression',3,'p_expression_plus','lab2&3.py',74),
-  ('expression -> expression - term','expression',3,'p_expression_minus','lab2&3.py',79),
-  ('expression -> term','expression',1,'p_expression_term','lab2&3.py',84),
-  ('term -> factor','term',1,'p_term_factor','lab2&3.py',89),
-  ('term -> term * factor','term',3,'p_term_multi','lab2&3.py',94),
-  ('term -> term / factor','term',3,'p_term_div','lab2&3.py',99),
-  ('factor -> ( expression )','factor',3,'p_factor_expression','lab2&3.py',104),
-  ('factor -> IDENTIFIER','factor',1,'p_factor_id','lab2&3.py',109),
-  ('factor -> INT10','factor',1,'p_factor_num','lab2&3.py',114),
-  ('factor -> INT8','factor',1,'p_factor_num','lab2&3.py',115),
-  ('factor -> INT16','factor',1,'p_factor_num','lab2&3.py',116),
-  ('factor -> REAL10','factor',1,'p_factor_num','lab2&3.py',117),
-  ('factor -> REAL8','factor',1,'p_factor_num','lab2&3.py',118),
-  ('factor -> REAL16','factor',1,'p_factor_num','lab2&3.py',119),
+  ('statement -> condition','statement',1,'p_statement_cond','lab2&3.py',56),
+  ('statement -> IDENTIFIER = expression','statement',3,'p_id_statement','lab2&3.py',84),
+  ('statement -> IF condition THEN statement','statement',4,'p_statement_if','lab2&3.py',92),
+  ('statement -> IF condition THEN statement ELSE statement','statement',6,'p_statement_ifelse','lab2&3.py',99),
+  ('statement -> WHILE condition DO statement','statement',4,'p_statement_while','lab2&3.py',107),
+  ('condition -> expression > expression','condition',3,'p_condition_expression','lab2&3.py',122),
+  ('condition -> expression < expression','condition',3,'p_condition_expression','lab2&3.py',123),
+  ('condition -> expression = expression','condition',3,'p_condition_expression','lab2&3.py',124),
+  ('expression -> expression + term','expression',3,'p_expression_plus','lab2&3.py',160),
+  ('expression -> expression - term','expression',3,'p_expression_minus','lab2&3.py',169),
+  ('expression -> term','expression',1,'p_expression_term','lab2&3.py',178),
+  ('term -> factor','term',1,'p_term_factor','lab2&3.py',187),
+  ('term -> term * factor','term',3,'p_term_multi','lab2&3.py',196),
+  ('term -> term / factor','term',3,'p_term_div','lab2&3.py',205),
+  ('factor -> ( expression )','factor',3,'p_factor_expression','lab2&3.py',214),
+  ('factor -> IDENTIFIER','factor',1,'p_factor_id','lab2&3.py',221),
+  ('factor -> INT10','factor',1,'p_factor_num','lab2&3.py',231),
+  ('factor -> INT8','factor',1,'p_factor_num','lab2&3.py',232),
+  ('factor -> INT16','factor',1,'p_factor_num','lab2&3.py',233),
+  ('factor -> REAL10','factor',1,'p_factor_num','lab2&3.py',234),
+  ('factor -> REAL8','factor',1,'p_factor_num','lab2&3.py',235),
+  ('factor -> REAL16','factor',1,'p_factor_num','lab2&3.py',236),
 ]
