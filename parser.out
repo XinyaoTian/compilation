@@ -1,425 +1,68 @@
 Created by PLY version 3.10 (http://www.dabeaz.com/ply)
 
-Unused terminals:
-
-    IF
-    THEN
-    ELSE
-    WHILE
-    DO
-
 Grammar
 
-Rule 0     S' -> statement
-Rule 1     statement -> expression
-Rule 2     expression -> expression + term
-Rule 3     expression -> expression - term
-Rule 4     expression -> term
-Rule 5     term -> factor
-Rule 6     term -> term * factor
-Rule 7     term -> term / factor
-Rule 8     factor -> ( expression )
-Rule 9     factor -> IDENTIFIER
-Rule 10    factor -> INT10
-Rule 11    factor -> INT8
-Rule 12    factor -> INT16
-Rule 13    factor -> REAL10
-Rule 14    factor -> REAL8
-Rule 15    factor -> REAL16
+Rule 0     S' -> prime
+Rule 1     prime -> line
+Rule 2     prime -> line prime
+Rule 3     line -> statement
+Rule 4     statement -> IDENTIFIER = statement
+Rule 5     statement -> IF condition THEN statement
+Rule 6     statement -> IF condition THEN statement ELSE statement
+Rule 7     statement -> WHILE condition DO statement
+Rule 8     statement -> { prime }
+Rule 9     condition -> expression > expression
+Rule 10    condition -> expression < expression
+Rule 11    condition -> expression = expression
+Rule 12    expression -> expression + term
+Rule 13    expression -> expression - term
+Rule 14    expression -> term
+Rule 15    term -> factor
+Rule 16    term -> term * factor
+Rule 17    term -> term / factor
+Rule 18    factor -> ( expression )
+Rule 19    factor -> IDENTIFIER
+Rule 20    factor -> INT10
+Rule 21    factor -> INT8
+Rule 22    factor -> INT16
+Rule 23    factor -> REAL10
+Rule 24    factor -> REAL8
+Rule 25    factor -> REAL16
 
 Terminals, with rules where they appear
 
-(                    : 8
-)                    : 8
-*                    : 6
-+                    : 2
--                    : 3
-/                    : 7
-DO                   : 
-ELSE                 : 
-IDENTIFIER           : 9
-IF                   : 
-INT10                : 10
-INT16                : 12
-INT8                 : 11
-REAL10               : 13
-REAL16               : 15
-REAL8                : 14
-THEN                 : 
-WHILE                : 
+(                    : 18
+)                    : 18
+*                    : 16
++                    : 12
+-                    : 13
+/                    : 17
+<                    : 10
+=                    : 4 11
+>                    : 9
+DO                   : 7
+ELSE                 : 6
+IDENTIFIER           : 4 19
+IF                   : 5 6
+INT10                : 20
+INT16                : 22
+INT8                 : 21
+REAL10               : 23
+REAL16               : 25
+REAL8                : 24
+THEN                 : 5 6
+WHILE                : 7
 error                : 
+{                    : 8
+}                    : 8
 
 Nonterminals, with rules where they appear
 
-expression           : 1 2 3 8
-factor               : 5 6 7
-statement            : 0
-term                 : 2 3 4 6 7
-
-Parsing method: LALR
-
-state 0
-
-    (0) S' -> . statement
-    (1) statement -> . expression
-    (2) expression -> . expression + term
-    (3) expression -> . expression - term
-    (4) expression -> . term
-    (5) term -> . factor
-    (6) term -> . term * factor
-    (7) term -> . term / factor
-    (8) factor -> . ( expression )
-    (9) factor -> . IDENTIFIER
-    (10) factor -> . INT10
-    (11) factor -> . INT8
-    (12) factor -> . INT16
-    (13) factor -> . REAL10
-    (14) factor -> . REAL8
-    (15) factor -> . REAL16
-
-    (               shift and go to state 5
-    IDENTIFIER      shift and go to state 6
-    INT10           shift and go to state 7
-    INT8            shift and go to state 8
-    INT16           shift and go to state 9
-    REAL10          shift and go to state 10
-    REAL8           shift and go to state 11
-    REAL16          shift and go to state 12
-
-    statement                      shift and go to state 1
-    expression                     shift and go to state 2
-    term                           shift and go to state 3
-    factor                         shift and go to state 4
-
-state 1
-
-    (0) S' -> statement .
-
-
-
-state 2
-
-    (1) statement -> expression .
-    (2) expression -> expression . + term
-    (3) expression -> expression . - term
-
-    $end            reduce using rule 1 (statement -> expression .)
-    +               shift and go to state 13
-    -               shift and go to state 14
-
-
-state 3
-
-    (4) expression -> term .
-    (6) term -> term . * factor
-    (7) term -> term . / factor
-
-    +               reduce using rule 4 (expression -> term .)
-    -               reduce using rule 4 (expression -> term .)
-    $end            reduce using rule 4 (expression -> term .)
-    )               reduce using rule 4 (expression -> term .)
-    *               shift and go to state 15
-    /               shift and go to state 16
-
-
-state 4
-
-    (5) term -> factor .
-
-    *               reduce using rule 5 (term -> factor .)
-    /               reduce using rule 5 (term -> factor .)
-    +               reduce using rule 5 (term -> factor .)
-    -               reduce using rule 5 (term -> factor .)
-    $end            reduce using rule 5 (term -> factor .)
-    )               reduce using rule 5 (term -> factor .)
-
-
-state 5
-
-    (8) factor -> ( . expression )
-    (2) expression -> . expression + term
-    (3) expression -> . expression - term
-    (4) expression -> . term
-    (5) term -> . factor
-    (6) term -> . term * factor
-    (7) term -> . term / factor
-    (8) factor -> . ( expression )
-    (9) factor -> . IDENTIFIER
-    (10) factor -> . INT10
-    (11) factor -> . INT8
-    (12) factor -> . INT16
-    (13) factor -> . REAL10
-    (14) factor -> . REAL8
-    (15) factor -> . REAL16
-
-    (               shift and go to state 5
-    IDENTIFIER      shift and go to state 6
-    INT10           shift and go to state 7
-    INT8            shift and go to state 8
-    INT16           shift and go to state 9
-    REAL10          shift and go to state 10
-    REAL8           shift and go to state 11
-    REAL16          shift and go to state 12
-
-    expression                     shift and go to state 17
-    term                           shift and go to state 3
-    factor                         shift and go to state 4
-
-state 6
-
-    (9) factor -> IDENTIFIER .
-
-    *               reduce using rule 9 (factor -> IDENTIFIER .)
-    /               reduce using rule 9 (factor -> IDENTIFIER .)
-    +               reduce using rule 9 (factor -> IDENTIFIER .)
-    -               reduce using rule 9 (factor -> IDENTIFIER .)
-    $end            reduce using rule 9 (factor -> IDENTIFIER .)
-    )               reduce using rule 9 (factor -> IDENTIFIER .)
-
-
-state 7
-
-    (10) factor -> INT10 .
-
-    *               reduce using rule 10 (factor -> INT10 .)
-    /               reduce using rule 10 (factor -> INT10 .)
-    +               reduce using rule 10 (factor -> INT10 .)
-    -               reduce using rule 10 (factor -> INT10 .)
-    $end            reduce using rule 10 (factor -> INT10 .)
-    )               reduce using rule 10 (factor -> INT10 .)
-
-
-state 8
-
-    (11) factor -> INT8 .
-
-    *               reduce using rule 11 (factor -> INT8 .)
-    /               reduce using rule 11 (factor -> INT8 .)
-    +               reduce using rule 11 (factor -> INT8 .)
-    -               reduce using rule 11 (factor -> INT8 .)
-    $end            reduce using rule 11 (factor -> INT8 .)
-    )               reduce using rule 11 (factor -> INT8 .)
-
-
-state 9
-
-    (12) factor -> INT16 .
-
-    *               reduce using rule 12 (factor -> INT16 .)
-    /               reduce using rule 12 (factor -> INT16 .)
-    +               reduce using rule 12 (factor -> INT16 .)
-    -               reduce using rule 12 (factor -> INT16 .)
-    $end            reduce using rule 12 (factor -> INT16 .)
-    )               reduce using rule 12 (factor -> INT16 .)
-
-
-state 10
-
-    (13) factor -> REAL10 .
-
-    *               reduce using rule 13 (factor -> REAL10 .)
-    /               reduce using rule 13 (factor -> REAL10 .)
-    +               reduce using rule 13 (factor -> REAL10 .)
-    -               reduce using rule 13 (factor -> REAL10 .)
-    $end            reduce using rule 13 (factor -> REAL10 .)
-    )               reduce using rule 13 (factor -> REAL10 .)
-
-
-state 11
-
-    (14) factor -> REAL8 .
-
-    *               reduce using rule 14 (factor -> REAL8 .)
-    /               reduce using rule 14 (factor -> REAL8 .)
-    +               reduce using rule 14 (factor -> REAL8 .)
-    -               reduce using rule 14 (factor -> REAL8 .)
-    $end            reduce using rule 14 (factor -> REAL8 .)
-    )               reduce using rule 14 (factor -> REAL8 .)
-
-
-state 12
-
-    (15) factor -> REAL16 .
-
-    *               reduce using rule 15 (factor -> REAL16 .)
-    /               reduce using rule 15 (factor -> REAL16 .)
-    +               reduce using rule 15 (factor -> REAL16 .)
-    -               reduce using rule 15 (factor -> REAL16 .)
-    $end            reduce using rule 15 (factor -> REAL16 .)
-    )               reduce using rule 15 (factor -> REAL16 .)
-
-
-state 13
-
-    (2) expression -> expression + . term
-    (5) term -> . factor
-    (6) term -> . term * factor
-    (7) term -> . term / factor
-    (8) factor -> . ( expression )
-    (9) factor -> . IDENTIFIER
-    (10) factor -> . INT10
-    (11) factor -> . INT8
-    (12) factor -> . INT16
-    (13) factor -> . REAL10
-    (14) factor -> . REAL8
-    (15) factor -> . REAL16
-
-    (               shift and go to state 5
-    IDENTIFIER      shift and go to state 6
-    INT10           shift and go to state 7
-    INT8            shift and go to state 8
-    INT16           shift and go to state 9
-    REAL10          shift and go to state 10
-    REAL8           shift and go to state 11
-    REAL16          shift and go to state 12
-
-    term                           shift and go to state 18
-    factor                         shift and go to state 4
-
-state 14
-
-    (3) expression -> expression - . term
-    (5) term -> . factor
-    (6) term -> . term * factor
-    (7) term -> . term / factor
-    (8) factor -> . ( expression )
-    (9) factor -> . IDENTIFIER
-    (10) factor -> . INT10
-    (11) factor -> . INT8
-    (12) factor -> . INT16
-    (13) factor -> . REAL10
-    (14) factor -> . REAL8
-    (15) factor -> . REAL16
-
-    (               shift and go to state 5
-    IDENTIFIER      shift and go to state 6
-    INT10           shift and go to state 7
-    INT8            shift and go to state 8
-    INT16           shift and go to state 9
-    REAL10          shift and go to state 10
-    REAL8           shift and go to state 11
-    REAL16          shift and go to state 12
-
-    term                           shift and go to state 19
-    factor                         shift and go to state 4
-
-state 15
-
-    (6) term -> term * . factor
-    (8) factor -> . ( expression )
-    (9) factor -> . IDENTIFIER
-    (10) factor -> . INT10
-    (11) factor -> . INT8
-    (12) factor -> . INT16
-    (13) factor -> . REAL10
-    (14) factor -> . REAL8
-    (15) factor -> . REAL16
-
-    (               shift and go to state 5
-    IDENTIFIER      shift and go to state 6
-    INT10           shift and go to state 7
-    INT8            shift and go to state 8
-    INT16           shift and go to state 9
-    REAL10          shift and go to state 10
-    REAL8           shift and go to state 11
-    REAL16          shift and go to state 12
-
-    factor                         shift and go to state 20
-
-state 16
-
-    (7) term -> term / . factor
-    (8) factor -> . ( expression )
-    (9) factor -> . IDENTIFIER
-    (10) factor -> . INT10
-    (11) factor -> . INT8
-    (12) factor -> . INT16
-    (13) factor -> . REAL10
-    (14) factor -> . REAL8
-    (15) factor -> . REAL16
-
-    (               shift and go to state 5
-    IDENTIFIER      shift and go to state 6
-    INT10           shift and go to state 7
-    INT8            shift and go to state 8
-    INT16           shift and go to state 9
-    REAL10          shift and go to state 10
-    REAL8           shift and go to state 11
-    REAL16          shift and go to state 12
-
-    factor                         shift and go to state 21
-
-state 17
-
-    (8) factor -> ( expression . )
-    (2) expression -> expression . + term
-    (3) expression -> expression . - term
-
-    )               shift and go to state 22
-    +               shift and go to state 13
-    -               shift and go to state 14
-
-
-state 18
-
-    (2) expression -> expression + term .
-    (6) term -> term . * factor
-    (7) term -> term . / factor
-
-    +               reduce using rule 2 (expression -> expression + term .)
-    -               reduce using rule 2 (expression -> expression + term .)
-    $end            reduce using rule 2 (expression -> expression + term .)
-    )               reduce using rule 2 (expression -> expression + term .)
-    *               shift and go to state 15
-    /               shift and go to state 16
-
-
-state 19
-
-    (3) expression -> expression - term .
-    (6) term -> term . * factor
-    (7) term -> term . / factor
-
-    +               reduce using rule 3 (expression -> expression - term .)
-    -               reduce using rule 3 (expression -> expression - term .)
-    $end            reduce using rule 3 (expression -> expression - term .)
-    )               reduce using rule 3 (expression -> expression - term .)
-    *               shift and go to state 15
-    /               shift and go to state 16
-
-
-state 20
-
-    (6) term -> term * factor .
-
-    *               reduce using rule 6 (term -> term * factor .)
-    /               reduce using rule 6 (term -> term * factor .)
-    +               reduce using rule 6 (term -> term * factor .)
-    -               reduce using rule 6 (term -> term * factor .)
-    $end            reduce using rule 6 (term -> term * factor .)
-    )               reduce using rule 6 (term -> term * factor .)
-
-
-state 21
-
-    (7) term -> term / factor .
-
-    *               reduce using rule 7 (term -> term / factor .)
-    /               reduce using rule 7 (term -> term / factor .)
-    +               reduce using rule 7 (term -> term / factor .)
-    -               reduce using rule 7 (term -> term / factor .)
-    $end            reduce using rule 7 (term -> term / factor .)
-    )               reduce using rule 7 (term -> term / factor .)
-
-
-state 22
-
-    (8) factor -> ( expression ) .
-
-    *               reduce using rule 8 (factor -> ( expression ) .)
-    /               reduce using rule 8 (factor -> ( expression ) .)
-    +               reduce using rule 8 (factor -> ( expression ) .)
-    -               reduce using rule 8 (factor -> ( expression ) .)
-    $end            reduce using rule 8 (factor -> ( expression ) .)
-    )               reduce using rule 8 (factor -> ( expression ) .)
+condition            : 5 6 7
+expression           : 9 9 10 10 11 11 12 13 18
+factor               : 15 16 17
+line                 : 1 2
+prime                : 2 8 0
+statement            : 3 4 5 6 6 7
+term                 : 12 13 14 16 17
 

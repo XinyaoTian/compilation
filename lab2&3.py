@@ -13,8 +13,7 @@ if sys.version_info[0] >= 3:
 
 # 把千辛万苦写好的tokens拿过来
 from lab1 import tokens
-
-from ply import lex
+from lab1 import lexer
 
 # # Build the lexer
 # lexer = lex.lex()
@@ -24,27 +23,88 @@ from ply import lex
 # lexer.next = None
 # lexer.begin = None
 # lexer.place = None
-#
-#
-# # with open('./lab1_testData.txt','r') as f:
-# #     data = f.read()
-# #
-# # # 将测试用数据传入lex
-# # lexer.input(data)
-# #
-# # # 切分次 Tokenize
-# # while True:
-# #     tok = lex.token()
-# #     if not tok:
-# #         break       # no more input
-# #     print (repr(tok.type),repr(tok.value))
-#
-# # 导入yacc
+
+print("lexer.place = " + str(lexer.place))
+
 import ply.yacc as yacc
 
-def p_statement_expr(p):
-    'statement : expression'
+# def p_statement_expr(p):
+#     '''statement : expression'''
+#     print(p[1])
+
+# P -> L
+def p_prime_line(p):
+    '''prime : line'''
     print(p[1])
+
+# P -> LP1
+def p_prime_lineprime(p):
+    '''prime : line prime'''
+    p[0] = p[1] + p[2]
+
+# L -> S
+def p_line_statement(p):
+    '''line : statement'''
+    p[0] = p[1]
+
+# S -> id = E
+def p_id_statement(p):
+    '''statement : IDENTIFIER '=' statement'''
+    p[1] = p[3]
+
+# S -> if C then S1
+def p_statement_if(p):
+    '''statement : IF condition THEN statement'''
+    if p[2] is True:
+        yacc.parse(p[4])
+
+# S -> if C then S1 else S2
+def p_statement_ifelse(p):
+    '''statement : IF condition THEN statement ELSE statement'''
+    if p[2] is True:
+        yacc.parse(p[4])
+    else:
+        yacc.parse(p[6])
+
+# S -> while C do S
+def p_statement_while(p):
+    '''statement : WHILE condition DO statement '''
+    if p[2] is True :
+        yacc.parse(p[4])
+    else:
+        pass
+
+
+
+# S -> { P }
+def p_statement_prime(p):
+    '''statement : '{' prime '}' '''
+    p[0] = p[2]
+
+# C -> E1 > E2 | E1 < E2 | E1
+def p_condition_expression(p):
+    ''' condition : expression '>' expression
+                  | expression '<' expression
+                  | expression '=' expression'''
+
+    if p[2] == '>':
+        if p[1] > p[3]:
+            p[0] = True
+        else:
+            p[0] = False
+
+    elif p[2] == '<':
+        if p[1] < p[3]:
+            p[0] = True
+        else:
+            p[0] = False
+
+    elif p[2] == '=':
+        if p[1] == p[3]:
+            p[0] = True
+        else:
+            p[0] = False
+
 
 # E -> E1 + T
 def p_expression_plus(p):
@@ -79,7 +139,7 @@ def p_term_div(p):
 # F -> (E)
 def p_factor_expression(p):
     '''factor : '(' expression ')' '''
-    p[0] = p[1]
+    p[0] = p[2]
 
 # F -> id
 def p_factor_id(p):
@@ -102,14 +162,13 @@ def p_error(p):
 
 # 建立一个语法解析器
 # Build the parser
-parser = yacc.yacc()
+yacc.yacc()
 
-while True:
-   try:
-       s = raw_input('calc > ')
-   except EOFError:
-       break
-   if not s: continue
-   result = parser.parse(s)
-   print(result)
+while 1:
+    try:
+        s = raw_input('Input your code here:\n')
+    except EOFError:
+        break
+    if not s: continue
+    yacc.parse(s)
 

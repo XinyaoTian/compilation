@@ -56,6 +56,7 @@ def t_REAL16(t):
     # 匹配整数部分非0的十六进制小数
     # 匹配整数部分为0的十六进制小数
     t.value = hex_to_dec(t.value)
+    t.value = float(t.value)
     return t
 
 # 八进制浮点型
@@ -64,6 +65,7 @@ def t_REAL8(t):
     # 匹配整数部分非0的八进制小数
     # 匹配整数部分非0的八进制小数
     t.value = oct_to_dec(t.value)
+    t.value = float(t.value)
     return t
 
 # 十进制浮点型
@@ -71,23 +73,27 @@ def t_REAL10(t):
     r'[1-9][\d]*\.[\d]+|0\.[\d]+'
     # 匹配整数部分非0的小数
     # 匹配整数部分为0的小数
+    t.value = float(t.value)
     return t
 
 # 十六进制整数
 def t_INT16(t):
     r'0[x|X][0-9a-f][0-9a-f]*'
     t.value = hex_to_dec(t.value)
+    t.value = int(t.value)
     return t
 
 # 八进制整数
 def t_INT8(t):
     r'0[0-7]+|000*'
     t.value = oct_to_dec(t.value)
+    t.value = int(t.value)
     return t
 
 # 十进制整型
 def t_INT10(t):
     r'[1-9][\d]*|0'
+    t.value = int(t.value)
     return t
 
 # 关键字相关匹配
@@ -190,7 +196,19 @@ def t_error(t):
     raise TypeError("Unknown text '%s'" % (t.value,) + '.Please check your syntax.')
 
 #---------------
-lex.lex()
+# lex.lex()
+#---------------
+
+# # Build the lexer
+lexer = lex.lex()
+lexer.code = None
+lexer.true = None
+lexer.false = None
+lexer.next = None
+lexer.begin = None
+lexer.place = None
+lexer.value = None
+lexer.name = None
 
 # Build the lexer
 # lexer = lex.lex()
