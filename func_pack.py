@@ -23,7 +23,7 @@ def hex_to_dec(string):
             sumB = sumB + (int(digit,16) / pow(16,counter))
             counter += 1
         # 返回整数部分和小数部分的相加结果
-        return sumA + sumB
+        return int(sumA + sumB)
 
 # 八进制/十进制 转换器
 # 可兼容八进制小数转换
@@ -48,4 +48,4 @@ def oct_to_dec(string):
             sumB = sumB + (int(digit,8) / pow(8,counter))
             counter += 1
         # 返回整数部分和小数部分的相加结果
-        return sumA + sumB
+        return int(sumA + sumB)

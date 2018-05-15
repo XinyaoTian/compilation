@@ -188,26 +188,3 @@ def t_error(t):
     logging.debug("Illegal character '%s'" % t.value[0] + 'in Line ' + str(t.lineno))
     # t.lexer.skip(1) # 跳过错误字符继续执行
     raise TypeError("Unknown text '%s'" % (t.value,) + '.Please check your syntax.')
-
-#---------------
-lex.lex()
-
-# Build the lexer
-# lexer = lex.lex()
-#
-# with open('./lab1_testData.txt','r') as f:
-#     data = f.read()
-#
-# # 将测试用数据传入lex
-# lexer.input(data)
-#
-# # 切分次 Tokenize
-# while True:
-#     tok = lex.token()
-#     if not tok:
-#         break       # no more input
-#     print (repr(tok.type),repr(tok.value))
-
-# lex.input("CH3COOH")
-# for tok in iter(lex.token, None):
-#     print repr(tok.type), repr(tok.value)
