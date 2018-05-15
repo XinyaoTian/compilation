@@ -243,8 +243,10 @@ def p_term_div(p):
 # F -> (E)
 def p_factor_expression(p):
     '''factor : '(' expression ')' '''
-    p[0]['value'] = p[2]['value']
-    p[0]['code'] = str(p[2]['value'])
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
+    d['value'] = p[2]['value']
+    d['code'] = str(p[2]['value'])
+    p[0] = d
     logging.info(str(p[0]) + " when F -> (E).")
 
 # F -> id
@@ -252,9 +254,11 @@ def p_factor_id(p):
     '''factor : IDENTIFIER '''
     d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': -1}
     d['name'] = p[1]
+    # Todo: Deal with this issue!
+    d['value'] = 0
     d['code'] = str(p[1])
     p[0] = d
-    print(p[0])
+    # print(p[0])
     logging.info(str(d) + " when F -> IDENTIFIER.")
 
 # F -> NUMBERS
