@@ -281,7 +281,7 @@ def p_factor_expression(p):
     d['value'] = p[2]['value']
     d['place'] = p[2]['place']
     d['code'] = str(p[2]['code'])
-    d['tree'] = (d['code'],str(p[2]['code']),)
+    d['tree'] = (d['code'],p[2]['tree'],)
     p[0] = d
     logging.info(str(p[0]) + " when F -> (E).")
 
