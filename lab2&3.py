@@ -105,22 +105,6 @@ def p_id_statement(p):
     p[0] = d
     logging.info(str(p[0]) + " when S -> id = E ")
 
-# S -> if C then S1
-def p_statement_if(p):
-    '''statement : IF condition THEN statement'''
-    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None,'tree':None}
-    d['code'] = 'if ' + str(p[2]['code']) + ' then ' + str(p[4]['code'])
-    d['tree'] = (d['code'],p[2]['tree'], p[4]['tree'],)
-    if p[2]['bool'] is True:
-        d['bool'] = p[2]['bool']
-        p[0] = d
-        # logging.info("Choose S1 \n"+str(p[0]) + " when S -> if C then S1 ")
-    else:
-        d['bool'] = p[2]['bool']
-        p[0] = d
-        # logging.info("Do nothing")
-    logging.info(str(p[0]) + " when S -> if C then S1 ")
-
 # # S -> if C then S1 else S2
 def p_statement_ifelse(p):
     '''statement : IF condition THEN statement ELSE statement'''
@@ -136,6 +120,22 @@ def p_statement_ifelse(p):
         p[0] = d
         #logging.info("Choose S2 \n" + str(p[0]) + " when S -> if C then S1 else S2 ")
     logging.info(str(p[0]) + " when S -> if C then S1 else S2 ")
+
+# S -> if C then S1
+def p_statement_if(p):
+    '''statement : IF condition THEN statement'''
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None,'tree':None}
+    d['code'] = 'if ' + str(p[2]['code']) + ' then ' + str(p[4]['code'])
+    d['tree'] = (d['code'],p[2]['tree'], p[4]['tree'],)
+    if p[2]['bool'] is True:
+        d['bool'] = p[2]['bool']
+        p[0] = d
+        # logging.info("Choose S1 \n"+str(p[0]) + " when S -> if C then S1 ")
+    else:
+        d['bool'] = p[2]['bool']
+        p[0] = d
+        # logging.info("Do nothing")
+    logging.info(str(p[0]) + " when S -> if C then S1 ")
 
 # S -> while C do S
 def p_statement_while(p):

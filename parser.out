@@ -7,8 +7,8 @@ Rule 1     prime -> line
 Rule 2     prime -> line prime
 Rule 3     line -> statement ;
 Rule 4     statement -> IDENTIFIER = expression
-Rule 5     statement -> IF condition THEN statement
-Rule 6     statement -> IF condition THEN statement ELSE statement
+Rule 5     statement -> IF condition THEN statement ELSE statement
+Rule 6     statement -> IF condition THEN statement
 Rule 7     statement -> WHILE condition DO statement
 Rule 8     statement -> { prime }
 Rule 9     condition -> expression > expression
@@ -42,7 +42,7 @@ Terminals, with rules where they appear
 =                    : 4 11
 >                    : 9
 DO                   : 7
-ELSE                 : 6
+ELSE                 : 5
 IDENTIFIER           : 4 19
 IF                   : 5 6
 INT10                : 20
@@ -64,7 +64,7 @@ expression           : 4 9 9 10 10 11 11 12 13 18
 factor               : 15 16 17
 line                 : 1 2
 prime                : 2 8 0
-statement            : 3 5 6 6 7
+statement            : 3 5 5 6 7
 term                 : 12 13 14 16 17
 
 Parsing method: LALR
@@ -76,8 +76,8 @@ state 0
     (2) prime -> . line prime
     (3) line -> . statement ;
     (4) statement -> . IDENTIFIER = expression
-    (5) statement -> . IF condition THEN statement
-    (6) statement -> . IF condition THEN statement ELSE statement
+    (5) statement -> . IF condition THEN statement ELSE statement
+    (6) statement -> . IF condition THEN statement
     (7) statement -> . WHILE condition DO statement
     (8) statement -> . { prime }
 
@@ -104,8 +104,8 @@ state 2
     (2) prime -> . line prime
     (3) line -> . statement ;
     (4) statement -> . IDENTIFIER = expression
-    (5) statement -> . IF condition THEN statement
-    (6) statement -> . IF condition THEN statement ELSE statement
+    (5) statement -> . IF condition THEN statement ELSE statement
+    (6) statement -> . IF condition THEN statement
     (7) statement -> . WHILE condition DO statement
     (8) statement -> . { prime }
 
@@ -136,8 +136,8 @@ state 4
 
 state 5
 
-    (5) statement -> IF . condition THEN statement
-    (6) statement -> IF . condition THEN statement ELSE statement
+    (5) statement -> IF . condition THEN statement ELSE statement
+    (6) statement -> IF . condition THEN statement
     (9) condition -> . expression > expression
     (10) condition -> . expression < expression
     (11) condition -> . expression = expression
@@ -212,8 +212,8 @@ state 7
     (2) prime -> . line prime
     (3) line -> . statement ;
     (4) statement -> . IDENTIFIER = expression
-    (5) statement -> . IF condition THEN statement
-    (6) statement -> . IF condition THEN statement ELSE statement
+    (5) statement -> . IF condition THEN statement ELSE statement
+    (6) statement -> . IF condition THEN statement
     (7) statement -> . WHILE condition DO statement
     (8) statement -> . { prime }
 
@@ -279,8 +279,8 @@ state 10
 
 state 11
 
-    (5) statement -> IF condition . THEN statement
-    (6) statement -> IF condition . THEN statement ELSE statement
+    (5) statement -> IF condition . THEN statement ELSE statement
+    (6) statement -> IF condition . THEN statement
 
     THEN            shift and go to state 26
 
@@ -523,11 +523,11 @@ state 25
 
 state 26
 
-    (5) statement -> IF condition THEN . statement
-    (6) statement -> IF condition THEN . statement ELSE statement
+    (5) statement -> IF condition THEN . statement ELSE statement
+    (6) statement -> IF condition THEN . statement
     (4) statement -> . IDENTIFIER = expression
-    (5) statement -> . IF condition THEN statement
-    (6) statement -> . IF condition THEN statement ELSE statement
+    (5) statement -> . IF condition THEN statement ELSE statement
+    (6) statement -> . IF condition THEN statement
     (7) statement -> . WHILE condition DO statement
     (8) statement -> . { prime }
 
@@ -746,8 +746,8 @@ state 35
 
     (7) statement -> WHILE condition DO . statement
     (4) statement -> . IDENTIFIER = expression
-    (5) statement -> . IF condition THEN statement
-    (6) statement -> . IF condition THEN statement ELSE statement
+    (5) statement -> . IF condition THEN statement ELSE statement
+    (6) statement -> . IF condition THEN statement
     (7) statement -> . WHILE condition DO statement
     (8) statement -> . { prime }
 
@@ -768,14 +768,14 @@ state 36
 
 state 37
 
-    (5) statement -> IF condition THEN statement .
-    (6) statement -> IF condition THEN statement . ELSE statement
+    (5) statement -> IF condition THEN statement . ELSE statement
+    (6) statement -> IF condition THEN statement .
 
   ! shift/reduce conflict for ELSE resolved as shift
-    ;               reduce using rule 5 (statement -> IF condition THEN statement .)
     ELSE            shift and go to state 47
+    ;               reduce using rule 6 (statement -> IF condition THEN statement .)
 
-  ! ELSE            [ reduce using rule 5 (statement -> IF condition THEN statement .) ]
+  ! ELSE            [ reduce using rule 6 (statement -> IF condition THEN statement .) ]
 
 
 state 38
@@ -918,10 +918,10 @@ state 46
 
 state 47
 
-    (6) statement -> IF condition THEN statement ELSE . statement
+    (5) statement -> IF condition THEN statement ELSE . statement
     (4) statement -> . IDENTIFIER = expression
-    (5) statement -> . IF condition THEN statement
-    (6) statement -> . IF condition THEN statement ELSE statement
+    (5) statement -> . IF condition THEN statement ELSE statement
+    (6) statement -> . IF condition THEN statement
     (7) statement -> . WHILE condition DO statement
     (8) statement -> . { prime }
 
@@ -934,10 +934,10 @@ state 47
 
 state 48
 
-    (6) statement -> IF condition THEN statement ELSE statement .
+    (5) statement -> IF condition THEN statement ELSE statement .
 
-    ;               reduce using rule 6 (statement -> IF condition THEN statement ELSE statement .)
-    ELSE            reduce using rule 6 (statement -> IF condition THEN statement ELSE statement .)
+    ;               reduce using rule 5 (statement -> IF condition THEN statement ELSE statement .)
+    ELSE            reduce using rule 5 (statement -> IF condition THEN statement ELSE statement .)
 
 WARNING: 
 WARNING: Conflicts:
