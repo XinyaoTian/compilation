@@ -49,3 +49,16 @@ def oct_to_dec(string):
             counter += 1
         # 返回整数部分和小数部分的相加结果
         return int(sumA + sumB)
+
+def print_node(n , count):
+    i = 0
+    c = count + 1
+    string = ""
+    for item in n:
+        if type(item) is not tuple:
+            while i < count :
+                string = string + "\t"
+                i += 1
+            print(string + item)
+        else:
+            print_node(item , c)
