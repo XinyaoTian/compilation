@@ -11,3 +11,52 @@
 	
 	请把文档和报告以及需要写的东西做的精美些，谢谢！
 	ps:如有疑问随时微信我。
+
+
+输出结果：
+D:\Anaconda3\python.exe D:/Working_repository/compilation/lab2&3.py
+while a3+15>10 do if x2=7 then while y<z do y=x*y/z; c=b*c+d;
+	while a3+15>10 do if x2=7 then while y<z do y=x*y/z;
+		while a3+15>10 do if x2=7 then while y<z do y=x*y/z
+			a3+15>10
+				a3+15
+					a3+15
+						a3+15
+						a3+15
+				10
+					10
+						10
+			if x2=7 then while y<z do y=x*y/z
+				x2=7
+					x2
+						x2
+							x2
+				while y<z do y=x*y/z
+					y<z
+						y
+							y
+								y
+						z
+							z
+								z
+					y=x*y/z
+						x*y/z
+							x*y/z
+								x*y
+									x
+										x
+									y
+								z
+	c=b*c+d;
+		c=b*c+d;
+			c=b*c+d
+				b*c+d
+					b*c
+						b*c
+							b
+								b
+							c
+					d
+						d
+
+Process finished with exit code 0
