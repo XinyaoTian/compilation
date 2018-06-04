@@ -1,4 +1,4 @@
-A Small Compilation Programme written by Python3
+A Small Compilation Programme written with Python3
 
 
 Version specification

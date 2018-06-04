@@ -58,4 +58,10 @@ def hex_to_dec(string):
         # 返回整数部分和小数部分的相加结果
         return sumA + sumB
 
-print (hex_to_dec('0xaa.11'))
+# print (hex_to_dec('0xaa.11'))
+
+a = [0,]
+b = [1,]
+t = (a,b,)
+a.append(2)
+print(t)
