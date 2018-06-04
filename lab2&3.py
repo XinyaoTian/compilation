@@ -11,6 +11,10 @@ import sys
 if sys.version_info[0] >= 3:
     raw_input = input
 
+# 用于清理屏幕，以应对多个 P->LP1 规约时，只输出最后一个
+import os
+def clear():os.system('cls')
+
 import logging
 logging.basicConfig(level=logging.INFO)
 
@@ -71,7 +75,7 @@ def p_prime_line(p):
     d['tree'] = (d['code'],p[1]['tree'],)
     d['bool'] = p[1]['bool']
     p[0] = d
-    logging.info(str(p[0]) + " when P -> L")
+    logging.info(str(d['code']) + " when P -> L")
     # print_node(d['tree'])
     # print (d['tree'])
 #
@@ -83,7 +87,8 @@ def p_prime_lineprime(p):
     d['tree'] = (d['code'],p[1]['tree'],p[2]['tree'],)
     d['bool'] = p[2]['bool']
     p[0] = d
-    logging.info(str(p[0]) + " when P -> LP1")
+    logging.info(str(d['code']) + " when P -> LP1")
+    os.system('cls')
     print_node(d['tree'] , 0)
 #
 # L -> S ;
@@ -94,7 +99,7 @@ def p_line_statement(p):
     d['tree'] = (d['code'],p[1]['tree'])
     d['bool'] = p[1]['bool']
     p[0] = d
-    logging.info(str(p[0]) + " when L -> S")
+    logging.info(str(d['code']) + " when L -> S")
 #
 # S -> id = E
 def p_id_statement(p):
@@ -103,7 +108,7 @@ def p_id_statement(p):
     d['code'] = str(p[1]) + "=" + str(p[3]['code'])
     d['tree'] = (d['code'],p[3]['tree'])
     p[0] = d
-    logging.info(str(p[0]) + " when S -> id = E ")
+    logging.info(str(d['code']) + " when S -> id = E ")
 
 # # S -> if C then S1 else S2
 def p_statement_ifelse(p):
@@ -119,7 +124,7 @@ def p_statement_ifelse(p):
         d['bool'] = p[2]['bool']
         p[0] = d
         #logging.info("Choose S2 \n" + str(p[0]) + " when S -> if C then S1 else S2 ")
-    logging.info(str(p[0]) + " when S -> if C then S1 else S2 ")
+    logging.info(str(d['code']) + " when S -> if C then S1 else S2 ")
 
 # S -> if C then S1
 def p_statement_if(p):
@@ -135,7 +140,7 @@ def p_statement_if(p):
         d['bool'] = p[2]['bool']
         p[0] = d
         # logging.info("Do nothing")
-    logging.info(str(p[0]) + " when S -> if C then S1 ")
+    logging.info(str(d['code']) + " when S -> if C then S1 ")
 
 # S -> while C do S
 def p_statement_while(p):
@@ -152,7 +157,7 @@ def p_statement_while(p):
         p[0] = d
         # logging.info("Do nothing")
         pass
-    logging.info(str(p[0]) + " when S -> while C do S ")
+    logging.info(str(d['code']) + " when S -> while C do S ")
 
 
 # S -> { P }
@@ -162,7 +167,7 @@ def p_statement_prime(p):
     d['code'] = p[2]['code']
     d['tree'] = (d['code'],p[2]['tree'], )
     p[0] = d
-    logging.info(str(p[0]) + " when S -> {P}")
+    logging.info(str(d['code']) + " when S -> {P}")
 
 # C -> E1 > E2 | E1 < E2 | E1
 def p_condition_expression(p):
@@ -202,7 +207,7 @@ def p_condition_expression(p):
             d['bool'] = False
             p[0] = d
 
-    logging.info(str(p[0]) + " when C -> E1 > E2 | E1 < E2 | E1.")
+    logging.info(str(d['code']) + " when C -> E1 > E2 | E1 < E2 | E1.")
 
 
 # E -> E1 + T
@@ -214,7 +219,7 @@ def p_expression_plus(p):
     d['place'] = d['code']
     d['tree'] = (d['code'],p[1]['tree'], p[3]['tree'],)
     p[0] = d
-    logging.info(str(d) + " when E -> E1 + T.")
+    logging.info(str(d['code']) + " when E -> E1 + T.")
 
 # E -> E1 - T
 def p_expression_minus(p):
@@ -225,7 +230,7 @@ def p_expression_minus(p):
     d['place'] = d['code']
     d['tree'] = (d['code'],p[1]['tree'],p[3]['tree'],)
     p[0] = d
-    logging.info(str(d) + " when E -> E1 - T.")
+    logging.info(str(d['code']) + " when E -> E1 - T.")
 
 # E -> T
 def p_expression_term(p):
@@ -236,7 +241,7 @@ def p_expression_term(p):
     d['code'] = str(p[1]['place'])
     d['tree'] = (d['code'],p[1]['tree'],)
     p[0] = d
-    logging.info(str(d) + " when E -> T.")
+    logging.info(str(d['code']) + " when E -> T.")
 
 # T -> F
 def p_term_factor(p):
@@ -247,7 +252,7 @@ def p_term_factor(p):
     d['code'] = p[1]['place']
     d['tree'] = (d['code'],p[1]['tree'],)
     p[0] = d
-    logging.info(str(d) + " when T -> F.")
+    logging.info(str(d['code']) + " when T -> F.")
 
 # T -> T1 * F
 def p_term_multi(p):
@@ -258,7 +263,7 @@ def p_term_multi(p):
     d['place'] = str(p[1]['code']) + "*" + str(p[3]['code'])
     d['tree'] = (d['code'],p[1]['tree'] , p[3]['tree'],)
     p[0] = d
-    logging.info(str(p[0]) + " when T -> T1 * F.")
+    logging.info(str(d['code']) + " when T -> T1 * F.")
 
 # T -> T1 / F
 def p_term_div(p):
@@ -272,7 +277,7 @@ def p_term_div(p):
     d['place'] = str(p[1]['code']) + "/" + str(p[3]['code'])
     d['tree'] = (d['code'] ,p[1]['tree'] , p[3]['tree'],)
     p[0] = d
-    logging.info(str(p[0]) + " when T -> T1 * F.")
+    logging.info(str(d['code']) + " when T -> T1 * F.")
 
 # F -> (E)
 def p_factor_expression(p):
@@ -283,7 +288,7 @@ def p_factor_expression(p):
     d['code'] = str(p[2]['code'])
     d['tree'] = (d['code'],p[2]['tree'],)
     p[0] = d
-    logging.info(str(p[0]) + " when F -> (E).")
+    logging.info(str(d['code']) + " when F -> (E).")
 
 # F -> id
 def p_factor_id(p):
@@ -297,7 +302,7 @@ def p_factor_id(p):
     d['tree'] = (str(p[1]),)
     p[0] = d
     # print(p[0])
-    logging.info(str(d) + " when F -> IDENTIFIER.")
+    logging.info(str(d['code']) + " when F -> IDENTIFIER.")
 
 # F -> NUMBERS
 def p_factor_num(p):
@@ -313,12 +318,12 @@ def p_factor_num(p):
     d['place'] = str(p[1])
     d['tree'] = (str(p[1]),)
     p[0] = d
-    logging.info(str(d) + " when F -> NUMBERS.")
+    logging.info(str(d['code']) + " when F -> NUMBERS.")
 
 
 # 异常语法处理
 def p_error(p):
-    print("Syntax error in input!")
+    print("Syntax error in input!Please check your input,the error syntax was after the lastest position.")
     # Just discard the token and tell the parser it's okay.
     # yacc.errok()
 
