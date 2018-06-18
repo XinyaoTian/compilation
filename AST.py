@@ -19,6 +19,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 from func_pack import print_node
+from func_pack import print_ast
 
 # 把千辛万苦写好的tokens拿过来
 from MyLexer import tokens
@@ -70,9 +71,10 @@ precedence = (
 # P -> L
 def p_prime_line(p):
     '''prime : line'''
-    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None , 'tree':None}
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None , 'tree':None,'syntax':None}
     d['code'] = p[1]['code']
     d['tree'] = (d['code'],p[1]['tree'],)
+    d['syntax'] = (':=', p[1]['syntax'],)
     d['bool'] = p[1]['bool']
     p[0] = d
     logging.info(str(d['code']) + " when P -> L")
@@ -82,21 +84,23 @@ def p_prime_line(p):
 # P -> LP1
 def p_prime_lineprime(p):
     '''prime : line prime'''
-    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None,'tree':None}
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None,'tree':None,'syntax':None}
     d['code'] = str(p[1]['code']) + ' ' + str(p[2]['code'])
     d['tree'] = (d['code'],p[1]['tree'],p[2]['tree'],)
     d['bool'] = p[2]['bool']
+    d['syntax'] = (':=', p[1]['syntax'], p[2]['syntax'],)
     p[0] = d
     logging.info(str(d['code']) + " when P -> LP1")
     os.system('cls')
-    print_node(d['tree'] , 0)
+    print_ast(d , 0)
 #
 # L -> S ;
 def p_line_statement(p):
     '''line : statement ';' '''
-    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None,'tree':None}
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None,'tree':None,'syntax':None}
     d['code'] = p[1]['code'] + ';'
     d['tree'] = (d['code'],p[1]['tree'])
+    d['tree'] = (':=', p[1]['syntax'])
     d['bool'] = p[1]['bool']
     p[0] = d
     logging.info(str(d['code']) + " when L -> S")
@@ -104,18 +108,20 @@ def p_line_statement(p):
 # S -> id = E
 def p_id_statement(p):
     '''statement : IDENTIFIER '=' expression'''
-    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None,'tree':None}
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None,'tree':None,'syntax':None}
     d['code'] = str(p[1]) + "=" + str(p[3]['code'])
     d['tree'] = (d['code'],p[3]['tree'])
+    d['syntax'] = ('id=_',p[3]['syntax'])
     p[0] = d
     logging.info(str(d['code']) + " when S -> id = E ")
 
 # # S -> if C then S1 else S2
 def p_statement_ifelse(p):
     '''statement : IF condition THEN statement ELSE statement'''
-    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None,'tree':None}
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None,'tree':None,'syntax':'if_then_else_'}
     d['code'] = 'if ' + str(p[2]['code']) + ' then ' + str(p[4]['code']) + ' else ' +str(p[6]['code'])
     d['tree'] = (d['code'],p[2]['tree'], p[4]['tree'],p[6]['tree'],)
+    d['syntax'] = ('if_then_else_', p[2]['syntax'], p[4]['syntax'],p[6]['syntax'],)
     if p[2]['bool'] is True:
         d['bool'] = p[2]['bool']
         p[0] = d
@@ -129,9 +135,10 @@ def p_statement_ifelse(p):
 # S -> if C then S1
 def p_statement_if(p):
     '''statement : IF condition THEN statement'''
-    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None,'tree':None}
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None,'tree':None,'syntax':None}
     d['code'] = 'if ' + str(p[2]['code']) + ' then ' + str(p[4]['code'])
     d['tree'] = (d['code'],p[2]['tree'], p[4]['tree'],)
+    d['syntax'] = ('if_then_', p[2]['syntax'], p[4]['syntax'],)
     if p[2]['bool'] is True:
         d['bool'] = p[2]['bool']
         p[0] = d
@@ -145,9 +152,10 @@ def p_statement_if(p):
 # S -> while C do S
 def p_statement_while(p):
     '''statement : WHILE condition DO statement '''
-    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None , 'tree':None}
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None , 'tree':None,'syntax':None}
     d['code'] ='while ' + p[2]['code'] + ' do ' + p[4]['code']
     d['tree'] = (d['code'],p[2]['tree'], p[4]['tree'],)
+    d['syntax'] = ('while_do_',p[2]['syntax'], p[4]['syntax'],)
     if p[2]['bool'] is True :
         d['bool'] = p[2]['bool']
         p[0] = d
@@ -163,9 +171,10 @@ def p_statement_while(p):
 # S -> { P }
 def p_statement_prime(p):
     '''statement : '{' prime '}' '''
-    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None , 'tree':None}
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None , 'tree':None,'syntax':':='}
     d['code'] = p[2]['code']
     d['tree'] = (d['code'],p[2]['tree'], )
+    d['syntax'] = (':=', p[2]['syntax'],)
     p[0] = d
     logging.info(str(d['code']) + " when S -> {P}")
 
@@ -174,12 +183,13 @@ def p_condition_expression(p):
     ''' condition : expression '>' expression
                   | expression '<' expression
                   | expression '=' expression'''
-    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None,'tree':None}
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None,'tree':None,'syntax':None}
     # print(p[2])
 
     if p[2] == '>':
         d['code'] = str(p[1]['code']) + ">" + str(p[3]['code'])
         d['tree'] = (d['code'],p[1]['tree'], p[3]['tree'],)
+        d['syntax'] = ('>',p[1]['syntax'], p[3]['syntax'],)
         if p[1]['value'] > p[3]['value']:
             d['bool'] = True
             p[0] = d
@@ -190,6 +200,7 @@ def p_condition_expression(p):
     elif p[2] is '<':
         d['code'] = str(p[1]['code']) + "<" + str(p[3]['code'])
         d['tree'] = (d['code'],p[1]['tree'], p[3]['tree'],)
+        d['syntax'] = ('<', p[1]['syntax'], p[3]['syntax'],)
         if p[1]['value'] < p[3]['value']:
             d['bool'] = True
             p[0] = d
@@ -200,6 +211,7 @@ def p_condition_expression(p):
     elif p[2] is '=':
         d['code'] = str(p[1]['code']) + "=" + str(p[3]['code'])
         d['tree'] = (d['code'],p[1]['tree'], )
+        d['syntax'] = ('=', p[1]['syntax'],)
         if p[1]['value'] == p[3]['value']:
             d['bool'] = True
             p[0] = d
@@ -213,62 +225,67 @@ def p_condition_expression(p):
 # E -> E1 + T
 def p_expression_plus(p):
     '''expression : expression '+' term'''
-    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None, 'tree':None}
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None, 'tree':None,'syntax':None}
     d['value'] = p[1]['value'] + p[3]['value']
     d['code'] = str(p[1]['code']) + "+" + str(p[3]['code'])
     d['place'] = d['code']
     d['tree'] = (d['code'],p[1]['tree'], p[3]['tree'],)
+    d['syntax'] = ('+', p[1]['syntax'], p[3]['syntax'],)
     p[0] = d
     logging.info(str(d['code']) + " when E -> E1 + T.")
 
 # E -> E1 - T
 def p_expression_minus(p):
     '''expression : expression '-' term'''
-    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None, 'tree':None}
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None, 'tree':None,'syntax':None}
     d['value'] = p[1]['value'] - p[3]['value']
     d['code'] = str(p[1]['code']) + "-" + str(p[3]['code'])
     d['place'] = d['code']
     d['tree'] = (d['code'],p[1]['tree'],p[3]['tree'],)
+    d['syntax'] = ('-', p[1]['syntax'], p[3]['syntax'],)
     p[0] = d
     logging.info(str(d['code']) + " when E -> E1 - T.")
 
 # E -> T
 def p_expression_term(p):
     '''expression : term'''
-    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None , 'tree':None}
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None , 'tree':None,'syntax':None}
     d['value'] = p[1]['value']
     d['place'] = p[1]['place']
     d['code'] = str(p[1]['place'])
     d['tree'] = (d['code'],p[1]['tree'],)
+    d['syntax'] = (':=', p[1]['syntax'],)
     p[0] = d
     logging.info(str(d['code']) + " when E -> T.")
 
 # T -> F
 def p_term_factor(p):
     '''term : factor'''
-    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None, 'tree':None}
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None, 'tree':None,'syntax':None}
     d['value'] = p[1]['value']
     d['place'] = p[1]['place']
     d['code'] = p[1]['place']
     d['tree'] = (d['code'],p[1]['tree'],)
+    d['syntax'] = (':=', p[1]['syntax'],)
     p[0] = d
     logging.info(str(d['code']) + " when T -> F.")
 
 # T -> T1 * F
 def p_term_multi(p):
     '''term : term '*' factor'''
-    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None, 'tree':None}
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None, 'tree':None,'syntax':None}
     d['value'] = p[1]['value'] * p[3]['value']
     d['code'] = str(p[1]['code']) + "*" + str(p[3]['code'])
     d['place'] = str(p[1]['code']) + "*" + str(p[3]['code'])
     d['tree'] = (d['code'],p[1]['tree'] , p[3]['tree'],)
+    d['syntax'] = ('*', p[1]['syntax'], p[3]['syntax'],)
     p[0] = d
     logging.info(str(d['code']) + " when T -> T1 * F.")
 
 # T -> T1 / F
 def p_term_div(p):
     '''term : term '/' factor'''
-    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None, 'tree':None}
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None, 'tree':None,'syntax':None}
     if p[3]['value'] is not 0:
         d['value'] = p[1]['value'] / p[3]['value']
     else :
@@ -276,30 +293,33 @@ def p_term_div(p):
     d['code'] = str(p[1]['code']) + "/" + str(p[3]['code'])
     d['place'] = str(p[1]['code']) + "/" + str(p[3]['code'])
     d['tree'] = (d['code'] ,p[1]['tree'] , p[3]['tree'],)
+    d['syntax'] = ('/', p[1]['syntax'], p[3]['syntax'],)
     p[0] = d
     logging.info(str(d['code']) + " when T -> T1 * F.")
 
 # F -> (E)
 def p_factor_expression(p):
     '''factor : '(' expression ')' '''
-    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None, 'tree':None}
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None, 'tree':None,'syntax':None}
     d['value'] = p[2]['value']
     d['place'] = p[2]['place']
     d['code'] = str(p[2]['code'])
     d['tree'] = (d['code'],p[2]['tree'],)
+    d['syntax'] = ("(_)",p[2]['syntax'],)
     p[0] = d
     logging.info(str(d['code']) + " when F -> (E).")
 
 # F -> id
 def p_factor_id(p):
     '''factor : IDENTIFIER '''
-    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None ,'tree':None}
+    d = {'code': '', 'bool': None, 'name': '', 'value': None, 'place': None ,'tree':None,'syntax':None}
     d['name'] = p[1]
     d['place'] = str(p[1])
     # Todo: Deal with this issue!
     d['value'] = 0
     d['code'] = str(p[1])
     d['tree'] = (str(p[1]),)
+    d['syntax'] = (":=",)
     p[0] = d
     # print(p[0])
     logging.info(str(d['code']) + " when F -> IDENTIFIER.")
@@ -312,11 +332,12 @@ def p_factor_num(p):
               | REAL10
               | REAL8
               | REAL16 '''
-    d = {'code':'','bool':None,'name':'','value':None,'place':None, 'tree':None}
+    d = {'code':'','bool':None,'name':'','value':None,'place':None, 'tree':None,'syntax':None}
     d['value'] = p[1]
     d['code'] = str(p[1])
     d['place'] = str(p[1])
     d['tree'] = (str(p[1]),)
+    d['syntax'] = (":=",)
     p[0] = d
     logging.info(str(d['code']) + " when F -> NUMBERS.")
 

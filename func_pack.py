@@ -50,6 +50,8 @@ def oct_to_dec(string):
         # 返回整数部分和小数部分的相加结果
         return int(sumA + sumB)
 
+
+
 # 打印缩进树
 def print_node(n , count):
     i = 0
@@ -63,6 +65,21 @@ def print_node(n , count):
             print(string + item)
         else:
             print_node(item , c)
+
+# 打印缩进树
+def print_ast(dict_n, count):
+    i = 0
+    c = count + 1
+    string = ""
+    for item in dict_n['tree']:
+        if type(item) is not tuple:
+            while i < count:
+                string = string + "\t"
+                i += 1
+            print(string + item)
+        else:
+            print_node(item, c)
+
 
 # 打印抽象语法树
 # def print_AST(n , count):
