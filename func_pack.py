@@ -66,7 +66,7 @@ def print_node(n , count):
         else:
             print_node(item , c)
 
-# 打印缩进树
+# 打印抽象语法树
 def print_ast(dict_n, count):
     i = 0
     c = count + 1
