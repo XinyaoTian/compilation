@@ -2,7 +2,7 @@
 # 编译原理课程实验 : 词法分析
 
 # written by : XinyaoTian
-# at : May/10th/2018
+# at : June/19th/2018
 # run with : python 3.6.1 without any packages
 
 import logging
@@ -236,7 +236,7 @@ class TestLexer(unittest.TestCase):
 
     def setUp(self):
         self.lexer = lex.lex()
-        print("Now setup the unit-test module.\n")
+        print("Now setup the unit-test module.")
 
     def tearDown(self):
         print("Close unit-test.\n")
@@ -251,7 +251,7 @@ class TestLexer(unittest.TestCase):
         self.assertEqual(tok.type,'INT10')
         # 判断词法分析的值知否等于 60 的十进制数值
         self.assertEqual(tok.value,60)
-        print("Test end.\n")
+        print("Test end.")
         pass
 
     def test_INT8(self):
@@ -264,7 +264,7 @@ class TestLexer(unittest.TestCase):
         self.assertEqual(tok.type,'INT8')
         # 判断词法分析的值知否等于 060 的十进制数值
         self.assertEqual(tok.value,oct_to_dec("060"))
-        print("Test end.\n")
+        print("Test end.")
         pass
 
     def test_INT16(self):
@@ -277,7 +277,97 @@ class TestLexer(unittest.TestCase):
         self.assertEqual(tok.type,'INT16')
         # 判断词法分析的值知否等于 0x80 的十进制数值
         self.assertEqual(tok.value,hex_to_dec("0X80"))
-        print("Test end.\n")
+        print("Test end.")
+        pass
+
+    def test_REAL10(self):
+        self.lexer.input("20.342")
+        print("Test No.4: REAL10 with input 20.342")
+        tok = lex.token()
+        print (repr(tok.type),repr(tok.value))
+        self.assertEqual(tok.type,'REAL10')
+        self.assertEqual(tok.value,20.342)
+        print("Test end.")
+        pass
+
+    def test_REAL8(self):
+        self.lexer.input("0712.726")
+        print("Test No.5: REAL8 with input 0712.726")
+        tok = lex.token()
+        print (repr(tok.type),repr(tok.value))
+        self.assertEqual(tok.type,'REAL8')
+        self.assertEqual(tok.value,oct_to_dec("0712.726"))
+        print("Test end.")
+        pass
+
+    def test_REAL16(self):
+        self.lexer.input("0xaab.cd")
+        print("Test No.6: REAL16 with input 0xaab.cd")
+        tok = lex.token()
+        print (repr(tok.type),repr(tok.value))
+        self.assertEqual(tok.type,'REAL16')
+        self.assertEqual(tok.value,hex_to_dec("0xaab.cd"))
+        print("Test end.")
+        pass
+
+    def test_IDENTIFIER1(self):
+        self.lexer.input("buffer_f1")
+        print("Test No.7: IDENTIFIER")
+        tok = lex.token()
+        print (repr(tok.type),repr(tok.value))
+        self.assertEqual(tok.type,'IDENTIFIER')
+        self.assertEqual(tok.value,"buffer_f1")
+        print("Test end.")
+        pass
+
+    def test_IDENTIFIER2(self):
+        self.lexer.input("bufferf1.UK1")
+        print("Test No.8: IDENTIFIER")
+        tok = lex.token()
+        print (repr(tok.type),repr(tok.value))
+        self.assertEqual(tok.type,'IDENTIFIER')
+        self.assertEqual(tok.value,"bufferf1.UK1")
+        print("Test end.")
+        pass
+
+    def test_RESERVE1(self):
+        self.lexer.input("while")
+        print("Test No.9: RESERVE")
+        tok = lex.token()
+        print (repr(tok.type),repr(tok.value))
+        self.assertEqual(tok.type,'WHILE')
+        self.assertEqual(tok.value,"_")
+        print("Test end.")
+        pass
+
+    def test_RESERVE2(self):
+        self.lexer.input("else")
+        print("Test No.10: RESERVE")
+        tok = lex.token()
+        print (repr(tok.type),repr(tok.value))
+        self.assertEqual(tok.type,'ELSE')
+        self.assertEqual(tok.value,"_")
+        print("Test end.")
+        pass
+
+    def test_SIGNAL1(self):
+        self.lexer.input("+")
+        print("Test No.11: SIGNAL")
+        tok = lex.token()
+        print (repr(tok.type),repr(tok.value))
+        self.assertEqual(tok.type,'+')
+        self.assertEqual(tok.value,"_")
+        print("Test end.")
+        pass
+
+    def test_SIGNAL1(self):
+        self.lexer.input("(")
+        print("Test No.12: SIGNAL")
+        tok = lex.token()
+        print (repr(tok.type),repr(tok.value))
+        self.assertEqual(tok.type,'(')
+        self.assertEqual(tok.value,"_")
+        print("Test end.")
         pass
 
     pass
