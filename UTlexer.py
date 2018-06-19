@@ -8,6 +8,8 @@
 import logging
 logging.basicConfig(level = logging.DEBUG)
 
+import unittest
+
 from func_pack import hex_to_dec
 from func_pack import oct_to_dec
 
@@ -213,19 +215,74 @@ lexer.name = None
 # Build the lexer
 lexer = lex.lex()
 
-with open('./lab1_testData.txt','r') as f:
-    data = f.read()
+# with open('./lab1_testData.txt','r') as f:
+#     data = f.read()
 #
-# # 将测试用数据传入lex
-lexer.input(data)
-#
+# 将测试用数据传入lex
+# lexer.input("60")
+
 # # 切分次 Tokenize
-while True:
-    tok = lex.token()
-    if not tok:
-        break       # no more input
-    print (repr(tok.type),repr(tok.value))
+# while True:
+#     tok = lex.token()
+#     if not tok:
+#         break       # no more input
+#     print (repr(tok.type),repr(tok.value))
 
 # lex.input("CH3COOH")
 # for tok in iter(lex.token, None):
 #     print repr(tok.type), repr(tok.value)
+
+class TestLexer(unittest.TestCase):
+
+    def setUp(self):
+        self.lexer = lex.lex()
+        print("Now setup the unit-test module.\n")
+
+    def tearDown(self):
+        print("Close unit-test.\n")
+
+    def test_INT10(self):
+        # 将 60 输入lexer
+        self.lexer.input("60")
+        print("Test No.1: INT10 with input 60")
+        tok = lex.token()
+        print (repr(tok.type),repr(tok.value))
+        # 判断词法分析的类型是否等于INT10
+        self.assertEqual(tok.type,'INT10')
+        # 判断词法分析的值知否等于 60 的十进制数值
+        self.assertEqual(tok.value,60)
+        print("Test end.\n")
+        pass
+
+    def test_INT8(self):
+        # 将 060 输入lexer
+        self.lexer.input("060")
+        print("Test No.2: INT8 with input 060")
+        tok = lex.token()
+        print (repr(tok.type),repr(tok.value))
+        # 判断词法分析的类型是否等于INT8
+        self.assertEqual(tok.type,'INT8')
+        # 判断词法分析的值知否等于 060 的十进制数值
+        self.assertEqual(tok.value,oct_to_dec("060"))
+        print("Test end.\n")
+        pass
+
+    def test_INT16(self):
+        # 将 0X80 输入lexer
+        self.lexer.input("0X80")
+        print("Test No.3: INT16 with input 0X80")
+        tok = lex.token()
+        print (repr(tok.type),repr(tok.value))
+        # 判断词法分析的类型是否等于INT16
+        self.assertEqual(tok.type,'INT16')
+        # 判断词法分析的值知否等于 0x80 的十进制数值
+        self.assertEqual(tok.value,hex_to_dec("0X80"))
+        print("Test end.\n")
+        pass
+
+    pass
+
+
+
+if __name__ == '__main__':
+    unittest.main()
